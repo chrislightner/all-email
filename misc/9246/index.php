@@ -17,7 +17,7 @@ $subjectversion = $subjectv . $version;
 switch ($version) {
     case "e1":
         $subject = "[NAME], Welcome to ADA Insurance Powered by Alliant";
-		$preheader = "New support for the same high-quality ADA coverage"
+		$preheader = "New support for the same high-quality ADA coverage";
         break;
     default:
         $subject = "";
@@ -108,6 +108,7 @@ echo "<li><a href=index.php?s=s1&v=e1&w=" . $width . "&h=" . $height . ">E1</a><
 				<p>From: [TBD]    </p>
 				<p>To: [EMAIL ADDRESS]    </p>
 				<p><?php echo "Subject: " . $subject ?></p>
+  <p><?php echo "Preheader: " . $preheader ?></p>
 			</div>
 			<div id="content">
 				<div id="device">
