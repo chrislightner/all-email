@@ -113,12 +113,12 @@ echo "<li><a href=index.php?s=s1&v=e1&w=" . $width . "&h=" . $height . ">E1</a><
 			<div id="content">
 				<div id="device">
 					<?php
-echo "<a href=index.php?s=" . $subjectv . "&v=" . $version . "&cu=" . $cu . "&w=740&h=800>Desktop</a> | <a href=index.php?s=" . $subjectv . "&v=" . $version . "&cu=" . $cu . "&w=320&h=480>iPhone</a> | <a href=all_life_" . $version . ".html>Content Only</a>";
+echo "<a href=index.php?s=" . $subjectv . "&v=" . $version . "&cu=" . $cu . "&w=740&h=800>Desktop</a> | <a href=index.php?s=" . $subjectv . "&v=" . $version . "&cu=" . $cu . "&w=320&h=480>iPhone</a> | <a href=ada_misc_" . $version . ".html>Content Only</a>";
 ?>
 				</div>
 				<div>
 					<?php
-echo "<iframe width=" . $width . " height=" . $height . " src=all_life_" . $version . ".html></iframe>";
+echo "<iframe width=" . $width . " height=" . $height . " src=ada_misc_" . $version . ".html></iframe>";
 ?>
 				</div>
 			</div>
