@@ -28,7 +28,7 @@ switch ($version) {
 		$preheader = "...";
         break;
     case "e4":
-        $subject = "Your no-cost (to you) ADA student insurance—don’t miss out";
+        $subject = "Your no-cost (to you) ADA student insurance &ndash;on’t miss out";
 		$preheader = "...";
         break;
     default:
