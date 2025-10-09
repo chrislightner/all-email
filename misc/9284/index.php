@@ -102,8 +102,8 @@ body {
 			<p><strong>Versions</strong></p>
 			<ul>
 			<?php
-echo "<li><a href=index.php?s=s1&v=e1&w=" . $width . "&h=" . $height . ">Pre-Conference Email (Practicing Dentists)</a></li>";
-echo "<li><a href=index.php?s=s1&v=e2&w=" . $width . "&h=" . $height . ">Post-Conference Email (Practicing Dentists)</a></li>";
+echo "<li><a href=index.php?s=s1&v=e1&w=" . $width . "&h=" . $height . ">Pre-Conf. Email</a></li>";
+echo "<li><a href=index.php?s=s1&v=e2&w=" . $width . "&h=" . $height . ">Post-Conf. Email</a></li>";
 ?>
 			</ul>
 		</div>
