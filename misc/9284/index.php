@@ -16,7 +16,7 @@ $subjectversion = $subjectv . $version;
 
 switch ($version) {
     case "e1":
-        $subject = "[Firstname], activate your ASDA no-cost benefit at NLC";
+        $subject = "[Firstname], activate your ADA member benefit at NLC";
 		$preheader = "Visit our booth for giveaways!";
         break;
     case "e2":
