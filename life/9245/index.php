@@ -15,12 +15,12 @@ $subjectversion = $subjectv . $version;
 
 switch ($version) {
     case "e1":
-        $subject = "Dr. [NAME], choose your own cost with ADA Life Insurance";
-		$preheader = "Save with affordable ADA member group rates AND a 32% premium credit<sup>1</sup>";
+        $subject = "(NEW) Dr. [NAME], now choose your own cost with ADA Life Insurance";
+		$preheader = "Save with affordable ADA member group rates";
         break;
     case "e2":
-        $subject = "ADA Life Insurance lets you choose your own cost";
-		$preheader = "Save with affordable ADA member group rates AND a 32% premium credit<sup>1</sup>";
+        $subject = "ADA Life Insurance now lets you choose your own cost";
+		$preheader = "Save with affordable ADA member group rates";
         break;
     default:
         $subject = "";
