@@ -107,9 +107,9 @@ body {
 			<p><strong>Versions</strong></p>
 			<ul>
 			<?php
-echo "<li><a href=index.php?s=s1&v=e1&w=" . $width . "&h=" . $height . ">E1 Auto-Enrolled in ASDA & Insurance Offer</a></li>";
-echo "<li><a href=index.php?s=s1&v=e2&w=" . $width . "&h=" . $height . ">E2 Auto-Enrolled in ASDA but not Insurance Offer</a></li>";
-echo "<li><a href=index.php?s=s1&v=e3&w=" . $width . "&h=" . $height . ">E3 Not Auto-Enrolled in ASDA or Insurance Offer</a></li>";
+echo "<li><a href=index.php?s=s1&v=e1&w=" . $width . "&h=" . $height . ">E1 Auto-Enrolled in ASDA & Insurance Offer</a><br><br></li>";
+echo "<li><a href=index.php?s=s1&v=e2&w=" . $width . "&h=" . $height . ">E2 Auto-Enrolled in ASDA but not Insurance Offer</a><br><br></li>";
+echo "<li><a href=index.php?s=s1&v=e3&w=" . $width . "&h=" . $height . ">E3 Not Auto-Enrolled in ASDA or Insurance Offer</a><br><br></li>";
 ?>
 			</ul>
 		</div>
