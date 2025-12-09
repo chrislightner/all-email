@@ -22,6 +22,10 @@ switch ($version) {
         $subject = "ADA Life Insurance now lets you choose your own cost";
 		$preheader = "Save with affordable ADA member group rates";
         break;
+    case "e3":
+        $subject = "(NEW) Dr. [NAME], add to your ADA Life Insurance at a cost you choose";
+		$preheader = "Strengthen your existing protection at affordable member group rates";
+        break;
     default:
         $subject = "";
 }
@@ -103,6 +107,7 @@ body {
 			<?php
 				echo "<li><a href=index.php?s=s1&v=e1&w=" . $width . "&h=" . $height . ">E1</a></li>";
 				echo "<li><a href=index.php?s=s1&v=e2&w=" . $width . "&h=" . $height . ">E2</a></li>";
+				echo "<li><a href=index.php?s=s1&v=e3&w=" . $width . "&h=" . $height . ">E3</a></li>";
 			?>
 			</ul>
 		</div>
