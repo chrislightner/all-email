@@ -99,7 +99,7 @@ body {
 			<p><strong>Versions</strong></p>
 			<ul>
 			<?php
-echo "<li><a href=index.php?s=s1&v=e1&w=" . $width . "&h=" . $height . ">Pre-Conf. Email</a></li>";
+echo "<li><a href=index.php?s=s1&v=e1&w=" . $width . "&h=" . $height . ">E1</a></li>";
 ?>
 			</ul>
 		</div>
