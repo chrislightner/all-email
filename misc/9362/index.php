@@ -16,15 +16,15 @@ $subjectversion = $subjectv . $version;
 
 switch ($version) {
     case "e1":
-        $subject = "[NAME], another feature of your ASDA membership";
+        $subject = "[NAME], another benefit of your ADA Student Membership";
 		$preheader = "Life Insurance and Disability Insurance activated for you";
         break;
     case "e2":
-        $subject = "[NAME], another benefit of your ASDA membership";
+        $subject = "[NAME], another benefit of your ADA Student Membership";
 		$preheader = "Activate your Life Insurance and Disability Insurance with guaranteed acceptance";
         break;
     case "e3":
-        $subject = "[NAME], another benefit of ASDA membership";
+        $subject = "[NAME], another benefit of your ADA Student Membership";
 		$preheader = "Activate your Life Insurance and Disability Insurance with guaranteed approval";
         break;
 
