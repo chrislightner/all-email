@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"
+    xmlns:o="urn:schemas-microsoft-com:office:office">
+
+<head>
+    <meta charset="utf-8">
+    <!-- utf-8 works for most cases -->
+    <meta name="viewport" content="width=device-width">
+    <!-- Forcing initial-scale shouldn't be necessary -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Use the latest (edge) version of IE rendering engine -->
+    <meta name="x-apple-disable-message-reformatting">
+    <!-- Disable auto-scale in iOS 10 Mail entirely -->
+    <title>Email</title>
+    <!-- The title tag shows in email notifications, like Android 4.4. -->
+    <!-- CSS Reset -->
+    <style>
+        /* What it does: Remove spaces around the email design added by some email clients. */
+        /* Beware: It can remove the padding / margin and add a background color to the compose a reply window. */
+        html,
+        body {
+            margin: 0 auto !important;
+            padding: 0 !important;
+            height: 100% !important;
+            width: 100% !important;
+        }
+
+    /* ZG add padding between sets of columns (used only in media queries) */
+
+        /* What it does: Stops email clients resizing small text. */
+        * {
+            -ms-text-size-adjust: 100%;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        /* What it does: Centers email on Android 4.4 */
+        /*  div[style*="margin: 16px 0"] {
+                 margin: 0 !important;
+            }*/
+
+        /* What it does: Stops Outlook from adding extra spacing to tables. */
+        table,
+        td {
+            mso-table-lspace: 0pt !important;
+            mso-table-rspace: 0pt !important;
+        }
+
+        /* What it does: Fixes webkit padding issue. Fix for Yahoo mail table alignment bug. Applies table-layout to the first 2 tables then removes for anything nested deeper. */
+        table {
+            border-spacing: 0 !important;
+            border-collapse: collapse !important;
+            table-layout: fixed !important;
+            margin: 0 auto !important;
+        }
+
+        table table table {
+            table-layout: auto;
+        }
+
+        /* What it does: Uses a better rendering method when resizing images in IE. */
+        img {
+            -ms-interpolation-mode: bicubic;
+        }
+
+    /* ...existing code... */
+
+    /* ...existing code... */
+
+        /* What it does: Prevents underlining the button text in Windows 10 */
+        .button-link {
+            text-decoration: none !important;
+        }
+
+    /* ...existing code... */
+
+        /* What it does: Removes right gutter in Gmail iOS app: https://github.com/TedGoas/Cerberus/issues/89  */
+        /* Create one of these media queries for each additional viewport size you'd like to fix */
+        /* Thanks to Eric Lepetit @ericlepetitsf) for help troubleshooting */
+        @media only screen and (min-device-width: 375px) and (max-device-width: 413px) {
+
+            /* iPhone 6 and 6+ */
+            .email-container {
+                min-width: 375px !important;
+            }
+        }
+    </style>
+
+    <style>
+        /* ZG superscript style must be accompanied by Outlook conditional*/
+        sup {
+            font-size: 60%;
+            vertical-align: super;
+            line-height: 0;
+        }
+    </style>
+    <!--[if gte mso 9]>
+    <style type="text/css">
+        sup {
+                font-size: 100%;
+                mso-text-raise: 10%;
+                mso-line-height-rule: exactly;
+            }
+    </style>
+    <![endif]-->
+
+    <!-- Progressive Enhancements -->
+    <style>
+
+        /* Media Queries */
+        @media screen and (max-width: 480px) {
+
+            /* What it does: Forces elements to resize to the full width of their container. Useful for resizing images beyond their max-width. */
+            .fluid {
+                width: 100% !important;
+                max-width: 100% !important;
+                height: auto !important;
+                margin-left: auto !important;
+                margin-right: auto !important;
+            }
+
+            /* What it does: Forces table cells into full-width rows. */
+            .stack-column,
+            .stack-column-center {
+                display: block !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                direction: ltr !important;
+            }
+
+            /* And center justify these ones. */
+            .stack-column-center {
+                text-align: center !important;
+            }
+
+            /* What it does: Generic utility class for centering. Useful for images, buttons, and nested tables. */
+            .center-on-narrow {
+                text-align: center !important;
+                display: block !important;
+                margin-left: auto !important;
+                margin-right: auto !important;
+                float: none !important;
+            }
+
+            table.center-on-narrow {
+                display: inline-block !important;
+            }
+        }
+    </style>
+    <!-- What it does: Makes background images in 72ppi Outlook render at correct size. -->
+    <!--[if gte mso 9]>
+    <xml>
+        <o:OfficeDocumentSettings>
+            <o:AllowPNG/>
+            <o:PixelsPerInch>96</o:PixelsPerInch>
+        </o:OfficeDocumentSettings>
+    </xml>
+    <![endif]-->
+
+</head>
+
+<body width="100%" bgcolor="#DDDDDD" style="margin: 0; mso-line-height-rule: exactly;">
+    <center style="width: 100%; background: #DDDDDD; text-align: left;">
+        <div style="max-width: 680px; margin: auto;" class="email-container">
+            <!--[if mso]>
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="680" align="center">
+            <tr>
+            <td>
+            <![endif]-->
+            <!-- Email Body : BEGIN -->
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="100%"
+                style="max-width: 680px;" class="email-container">
+
+                <!-- BRANDING : BEGIN -->
+                <tr>
+                    <td class="" bgcolor="#339933" style="text-align: center;padding:30px 10px 30px;">
+                        <img src="https://d2mtwy88ch1l1k.cloudfront.net/all/ada/ada-alliant-rev.png"
+                alt="ADA Insurance Powered by Alliant" width="220" style="width:220px;display: block; border: none;margin:0 auto;">
+                    </td>
+                </tr>
+                <!-- BRANDING : END -->
+
+                <!-- HEADER : START -->
+
+                <!-- HEADER : END -->
+
+                <!-- BODY BEGIN : BEGIN -->
+                <tr>
+                    <td bgcolor="#ffffff">
+                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                            <tr>
+                                <td valign="middle"
+                                    style="padding:40px 40px 10px; margin:0px; font-family: Helvetica, Arial, sans-serif;font-size: 18px; mso-line-height-rule:exactly;line-height:24px; color: #555555; text-align:left;"
+                                    class="item">
+                                    <p style="margin:0;">Dear [NAME]:</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td valign="middle"
+                                    style="padding:10px 40px 10px; margin:0px; font-family: Helvetica, Arial, sans-serif;font-size: 18px; mso-line-height-rule:exactly;line-height:24px; color: #555555; text-align:left;"
+                                    class="item">
+									<p style="margin:0;">As an ADA student member, you’re probably aware there are many benefits to membership. We’d like to remind you about one that’s <strong>automatically activated for you</strong>: Life Insurance and Disability Insurance Underwritten by Protective from ADA Insurance Brokered by Alliant. This coverage exclusively for dental students is <strong>paid for by the ADA<sup>®</sup> Members Insurance Plans</strong>.</p>
+                                </td>
+                            </tr>
+                            
+                          <tr>
+                                <td valign="middle"
+                                    style="padding:10px 40px 10px; margin:0px; font-family: Helvetica, Arial, sans-serif;font-size: 18px; mso-line-height-rule:exactly;line-height:24px; color: #555555; text-align:left;"
+                                    class="item">
+                                    <p style="margin:0;"> Your coverage includes:</p>
+                              </td>
+                            </tr>
+                            <tr>
+                                <td
+                                    style="padding: 10px 40px;">
+                                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                        <tr>
+                                            <td valign="top"
+                                                style="width:10px;padding: 5px 10px;font-family: Helvetica, sans-serif;font-size: 24px; mso-line-height-rule: exactly;line-height:24px;mso-vertical-align: top;color:#339933;">
+                                                &bull;</td>
+                                            <td valign="top"
+                                                style="padding: 4px; font-size: 18px;font-family: Helvetica, sans-serif;mso-line-height-rule: exactly;line-height:24px; vertical-align: top;">
+                                                $50,000 of Term Life Insurance plus $50,000 added benefit paid if death is the result of a covered accident </td>
+                                        </tr>
+                                        <tr>
+                                            <td valign="top"
+                                                style="width:10px;padding: 5px 10px;font-family: Helvetica, sans-serif;font-size: 24px; mso-line-height-rule: exactly;line-height:24px;mso-vertical-align: top;color:#339933;">
+                                                &bull;</td>
+                                            <td valign="top"
+                                                style="padding: 4px; font-size: 18px;font-family: Helvetica, sans-serif;mso-line-height-rule: exactly;line-height:24px; vertical-align: top;">
+                                                $2,000 a month of Disability Income Insurance benefits for up to 7 years plus up to $2,000 a month to help repay student loans</td>
+                                        </tr>
+                                        
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td valign="middle"
+                                    style="padding:10px 40px 10px; margin:0px; font-family: Helvetica, Arial, sans-serif;font-size: 18px; mso-line-height-rule:exactly;line-height:24px; color: #555555; text-align:left;"
+                                    class="item">
+									<p style="margin:0;">Once you graduate, you will also have access to an exclusive conversion offer with <strong>guaranteed acceptance</strong><sup>1</sup>, no medical exam or health questions required. Your life coverage and accidental death benefit automatically increase to $100,000 on the July 1 after graduation. Your disability coverage will include $2,000 monthly Disability Income Protection Insurance and $2,000 monthly Office Overhead Expense  Insurance.</p>
+                                </td>
+                            </tr>
+							<tr>
+                                <td valign="middle"
+                                    style="padding:10px 40px 10px; margin:0px; font-family: Helvetica, Arial, sans-serif;font-size: 18px; mso-line-height-rule:exactly;line-height:24px; color: #555555; text-align:left;"
+                                    class="item">
+									<p style="margin:0;">If you’d like more information about your coverage, <a href="https://ada.protective.com/dental-student.aspx" target="_blank">learn more here</a> or contact us at (800)789-5655. We look forward to helping you protect yourself and your future!</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td valign="middle"
+                                    style="padding:10px 40px 5px; margin:0px; font-family: Helvetica, Arial, sans-serif;font-size: 18px; mso-line-height-rule:exactly;line-height:24px;color: #555555;text-align:left;"
+                                    class="item">
+                                    <p style="margin:0;">
+                                        All the best,
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td valign="middle"
+                                    style="padding:5px 40px 10px; margin:0px; font-family: Helvetica, Arial, sans-serif;font-size: 18px; mso-line-height-rule:exactly;line-height:24px;color: #555555;text-align:left;"
+                                    class="item">
+                                    <p style="margin:0;">
+                                        Your ADA Insurance Service Team<br>
+                                        at Alliant Insurance Services<br>
+                                        
+                                    </p>
+                                </td>
+                            </tr>
+							<tr>
+                            <td style="padding: 10px 40px 10px;text-align: left;">
+                                <img src="https://d2mtwy88ch1l1k.cloudfront.net/all/ada/ADA_Insurance_BrokeredbyAlliant-320x168.png"
+                                    width="160" height="84" alt="HPSO Healthcare Providers Service Organization"
+                                    border="0"><br><br>
+                            </td>
+                        </tr> 
+
+                        </table>
+                    </td>
+                </tr>
+                <!-- BODY : END -->
+
+                <!-- FOOTER BAR : BEGIN -->
+                <tr>
+                    <td style="background-color:#555;">
+                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                            <tr>
+                                <td
+                                    style="padding: 30px 40px 5px;text-align: left;">
+                                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                        <tr>
+                                            <td valign="top"
+                                                style="width:5px;padding: 4px 4px 4px 0; font-size: 13px;font-family: Helvetica, sans-serif;mso-line-height-rule: exactly;line-height: 1.4em; color: #cecece; vertical-align: top;text-align: left;">
+                                                <sup>1</sup></td>
+                                            <td valign="top"
+                                                style="padding: 4px 0; font-size: 13px;font-family: Helvetica, sans-serif;mso-line-height-rule: exactly;line-height: 1.4em; color: #cecece; vertical-align: top;">
+                                                Disability coverage is issued regardless of your medical condition if you are under age 60, but benefits are not payable for disabilities resulting from a sickness, disorder, physical condition or symptom that existed or was treated within 6 months prior to enrollment until guaranteed issue coverage has been in effect for at least 12 consecutive months.</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td
+                                    style="padding: 5px 40px; font-family: Helvetica, Arial, sans-serif;font-size: 13px;mso-line-height-rule: exactly;line-height: 1.4em;color: #cecece;">
+                                    <p style="margin:0;">Protective refers to Protective Life Insurance Company (PLICO) and its affiliates, including Protective Life and Annuity Company (PLAIC). PLICO, founded in 1907, is located in Omaha, NE and is licensed in all states excluding New York. PLAIC is located in Birmingham, AL, and is licensed in New York.
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td
+                                    style="padding: 5px 40px; font-family: Helvetica, Arial, sans-serif;font-size: 13px;mso-line-height-rule: exactly;line-height: 1.4em;color: #cecece;">
+                                    <p style="margin:0;">Protective<sup>&reg;</sup> is a registered trademark of PLICO. The Protective trademarks, logos and service marks are property of PLICO and are protected by copyright, trademark, and/or other proprietary rights and laws. ADA<sup>&reg;</sup> is a registered trademark of the American Dental Association (ADA). ADA Members Insurance Plans<sup>&reg;</sup> is a registered service mark of the ADA. The ADA trademarks, logos, and service marks are the property of the ADA and are used by Protective with permission. In some states, the ADA is entitled to receive royalties from the ADA Members Insurance Plans.
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td
+                                    style="padding: 5px 40px; font-family: Helvetica, Arial, sans-serif;font-size: 13px;mso-line-height-rule: exactly;line-height: 1.4em;color: #cecece;">
+                                    <p style="margin:0;">ADA Members Insurance Plans and ADA Insurance refers to the group life, disability, and supplemental medical policies issued by PLICO and PLAIC to the ADA.
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td
+                                    style="padding: 5px 40px; font-family: Helvetica, Arial, sans-serif;font-size: 13px;mso-line-height-rule: exactly;line-height: 1.4em;color: #cecece;">
+                                    <p style="margin:0;">&copy;2025 Alliant Insurance Services, Inc. All rights reserved. CA License No. 0C36861<br>
+                                        18100 Von Karman Ave., Ste. 1000 | Irvine, California 92612-7196
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td
+                                    style="padding: 5px 40px 30px; font-family: Helvetica, Arial, sans-serif;font-size: 13px;mso-line-height-rule: exactly;line-height: 1.4em;color: #cecece;">
+                                  ALL-9362 E1 (11/25)
+                              </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <!-- FOOTER BAR : END -->
+            </table>
+            <br><br>
+            <!-- Email Body : END -->
+            <!--[if mso]>
+            </td>
+            </tr>
+            </table>
+            <![endif]-->
+        </div>
+    </center>
+</body>
+
+</html>
