@@ -4,7 +4,7 @@
  * Automatically detects emails in the same folder and provides Desktop/Mobile toggles.
  */
 
-// 1. CUSTOM LABELS CONFIGURATION (RESTORED)
+// 1. CUSTOM LABELS CONFIGURATION
 // Edit these to match your specific project needs.
 $customLabels = [
     'e1' => 'First email baseline',
@@ -115,6 +115,19 @@ if ($tagLower === 'e1') {
             margin-bottom: 15px;
             padding-bottom: 15px;
             border-bottom: 1px solid #eee;
+        }
+
+        /* MOBILE ADJUSTMENT: Stack title above buttons */
+        @media screen and (max-width: 600px) {
+            .header-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            .view-toggles {
+                width: 100%;
+                justify-content: space-between;
+            }
         }
 
         .project-info h1 {
@@ -334,13 +347,13 @@ if ($tagLower === 'e1') {
                     <h1>ALL-9362 ASDA Emails</h1>
                 </div>
                 <div class="view-toggles">
-                    <button onclick="preparePrint()" class="print-btn">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"></path><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-                        Print PDF
-                    </button>
-                    <div style="width: 1px; background: #ddd; margin: 0 5px;"></div>
                     <a href="index.php?f=<?php echo $currentFile; ?>&m=desktop" class="view-btn <?php echo ($viewMode == 'desktop') ? 'active' : ''; ?>">Desktop</a>
                     <a href="index.php?f=<?php echo $currentFile; ?>&m=mobile" class="view-btn <?php echo ($viewMode == 'mobile') ? 'active' : ''; ?>">Mobile</a>
+                    <div style="width: 1px; background: #ddd; margin: 0 5px;"></div>
+                    <button onclick="preparePrint()" class="print-btn">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"></path><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                        PDF
+                    </button>
                 </div>
             </div>
             
