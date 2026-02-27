@@ -66,7 +66,7 @@ if ($tagLower === 'e1') {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Email Proof - <?php echo htmlspecialchars($currentFile); ?></title>
     <style>
         :root {
@@ -86,6 +86,7 @@ if ($tagLower === 'e1') {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
+            overflow-x: hidden;
         }
 
         .wrapper {
@@ -95,6 +96,7 @@ if ($tagLower === 'e1') {
             padding: 20px;
             min-height: 100vh;
             box-sizing: border-box;
+            max-width: 100vw;
         }
 
         #top-nav {
@@ -115,19 +117,11 @@ if ($tagLower === 'e1') {
             margin-bottom: 15px;
             padding-bottom: 15px;
             border-bottom: 1px solid #eee;
+            gap: 10px;
         }
 
-        /* MOBILE ADJUSTMENT: Stack title above buttons */
-        @media screen and (max-width: 600px) {
-            .header-row {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
-            }
-            .view-toggles {
-                width: 100%;
-                justify-content: space-between;
-            }
+        .project-info {
+            min-width: 0; /* Allows shrinking for long titles */
         }
 
         .project-info h1 {
@@ -135,6 +129,38 @@ if ($tagLower === 'e1') {
             font-size: 1.2rem;
             color: var(--text-main);
             font-weight: 700;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        /* MOBILE ADJUSTMENT: Stack title above buttons and allow button wrap */
+        @media screen and (max-width: 600px) {
+            .wrapper { padding: 10px; }
+            #top-nav { padding: 15px; }
+            .header-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            .view-toggles {
+                width: 100%;
+                flex-wrap: wrap; /* CRITICAL: Allows buttons to wrap on smaller Pro screens */
+                justify-content: flex-start;
+                background: none !important; /* Move bg to buttons for wrap safety */
+                padding: 0 !important;
+                gap: 6px !important;
+            }
+            .view-btn, .print-btn, .unwrap-btn {
+                background: #eee;
+                flex-grow: 1;
+                justify-content: center;
+                padding: 10px 8px !important;
+            }
+            .view-btn.active {
+                background: var(--accent-color) !important;
+                color: #fff !important;
+            }
+            .divider { display: none !important; }
         }
 
         .controls {
@@ -194,7 +220,7 @@ if ($tagLower === 'e1') {
             gap: 2px;
         }
 
-        .view-btn, .print-btn {
+        .view-btn, .print-btn, .unwrap-btn {
             padding: 8px 16px;
             border-radius: 7px;
             text-decoration: none;
@@ -207,6 +233,7 @@ if ($tagLower === 'e1') {
             display: flex;
             align-items: center;
             gap: 5px;
+            white-space: nowrap;
         }
 
         .view-btn.active {
@@ -215,7 +242,7 @@ if ($tagLower === 'e1') {
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        .print-btn:hover {
+        .print-btn:hover, .unwrap-btn:hover {
             background: #e0e0e0;
             color: #333;
         }
@@ -232,13 +259,19 @@ if ($tagLower === 'e1') {
         .meta-line {
             margin-bottom: 4px;
             display: flex;
+            flex-wrap: wrap;
         }
         .meta-line:last-child { margin-bottom: 0; }
         .meta-line b { 
             min-width: 90px; 
             color: var(--text-main);
         }
-        .meta-line span { color: var(--text-muted); }
+        .meta-line span { 
+            color: var(--text-muted); 
+            word-break: break-word;
+            flex: 1;
+            min-width: 150px;
+        }
 
         #preview-container {
             width: 100%;
@@ -270,6 +303,19 @@ if ($tagLower === 'e1') {
             box-shadow: 0 25px 50px rgba(0,0,0,0.2);
             position: relative;
             overflow: hidden; 
+            transform-origin: top center;
+        }
+
+        /* Scale down the mobile phone preview if screen is too small */
+        @media screen and (max-width: 450px) {
+            .mode-mobile #preview-frame {
+                transform: scale(0.85);
+            }
+        }
+        @media screen and (max-width: 380px) {
+            .mode-mobile #preview-frame {
+                transform: scale(0.75);
+            }
         }
 
         iframe {
@@ -349,7 +395,11 @@ if ($tagLower === 'e1') {
                 <div class="view-toggles">
                     <a href="index.php?f=<?php echo $currentFile; ?>&m=desktop" class="view-btn <?php echo ($viewMode == 'desktop') ? 'active' : ''; ?>">Desktop</a>
                     <a href="index.php?f=<?php echo $currentFile; ?>&m=mobile" class="view-btn <?php echo ($viewMode == 'mobile') ? 'active' : ''; ?>">Mobile</a>
-                    <div style="width: 1px; background: #ddd; margin: 0 5px;"></div>
+                    <a href="<?php echo htmlspecialchars($currentFile); ?>" target="_blank" class="unwrap-btn">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                        Unwrap
+                    </a>
+                    <div class="divider" style="width: 1px; background: #ddd; margin: 0 5px;"></div>
                     <button onclick="preparePrint()" class="print-btn">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"></path><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
                         PDF
