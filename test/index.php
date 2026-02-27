@@ -332,12 +332,19 @@ if ($tagLower === 'e1') {
                 size: portrait;
                 margin: 0.5in;
             }
-            body, html, .wrapper {
+            body, html {
+                background: #fff !important;
+                /* Crucial: remove fixed heights and hidden overflows for pagination */
+                height: auto !important;
+                overflow: visible !important;
+            }
+            .wrapper {
                 background: #fff !important;
                 display: block !important;
                 height: auto !important;
                 padding: 0 !important;
                 margin: 0 !important;
+                overflow: visible !important;
             }
             #top-nav {
                 box-shadow: none !important;
@@ -345,6 +352,7 @@ if ($tagLower === 'e1') {
                 max-width: 100% !important;
                 margin: 0 0 10px 0 !important;
                 padding: 0 !important;
+                overflow: visible !important;
             }
             .header-row, .controls {
                 display: none !important; 
@@ -365,6 +373,8 @@ if ($tagLower === 'e1') {
             #print-mount {
                 display: block !important;
                 width: 100% !important;
+                height: auto !important;
+                overflow: visible !important;
             }
         }
     </style>
