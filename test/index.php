@@ -12,6 +12,8 @@ $customLabels = [
     'e3' => 'Third email Catch-all',
 ];
 
+$projectName = "ALL-9362 ASDA Emails";
+
 // 2. DYNAMIC VERSION DETECTION
 function getVersionLabel($filename) {
     $parts = explode('_', str_replace('.html', '', $filename));
@@ -67,7 +69,7 @@ if ($tagLower === 'e1') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Email Proof - <?php echo htmlspecialchars($currentFile); ?></title>
+    <title><?php echo $projectName; ?> - <?php echo htmlspecialchars($currentFile); ?></title>
     <style>
         :root {
             --bg-color: #f0f2f5;
@@ -390,7 +392,7 @@ if ($tagLower === 'e1') {
         <nav id="top-nav">
             <div class="header-row">
                 <div class="project-info">
-                    <h1>ALL-9362 ASDA Emails</h1>
+                    <h1><?php echo $projectName; ?></h1>
                 </div>
                 <div class="view-toggles">
                     <a href="index.php?f=<?php echo $currentFile; ?>&m=desktop" class="view-btn <?php echo ($viewMode == 'desktop') ? 'active' : ''; ?>">Desktop</a>
