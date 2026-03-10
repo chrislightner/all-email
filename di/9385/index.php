@@ -19,20 +19,20 @@ $categoryOrder = ['ADA'];
  * SUB-CATEGORY GROUPS:
  * These will act as the OptGroup headers in the dropdown.
  */
-// $subCategoryGroups = [
-//     'NSO'   => ['nso-e1', 'nso-e2', 'nso-e3'],
-//     'HPSO' => ['hpso-e1', 'hpso-e2', 'hpso-e3'],
-//     'ACA' => ['aca-e4', 'aca-e5', 'aca-e6'],
-// ];
+$subCategoryGroups = [
+    'ADA'   => ['ada-e1', 'ada-e2', 'ada-e3'],
+    // 'HPSO' => ['hpso-e1', 'hpso-e2', 'hpso-e3'],
+    // 'ACA' => ['aca-e4', 'aca-e5', 'aca-e6'],
+];
 
 /**
  * CUSTOM LABELS CONFIGURATION 
  * Matches the 'key' generated (prefix-version)
  */
 $customLabels = [
-    'ada-e1' => 'E1 Existing DI Insureds',
-    'ada-e2' => 'E2 All Eligible',
-    'ada-e3' => 'E3 Address Email',
+    'ada-e1' => 'Existing DI Insureds',
+    'ada-e2' => 'All Eligible',
+    'ada-e3' => 'Address Email',
 ];
 
 /**
