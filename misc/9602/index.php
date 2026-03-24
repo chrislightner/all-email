@@ -10,7 +10,7 @@ $customLabels = [
     'e1' => '',
 ];
 
-$projectName = "ALL-9602 ADA Student to Resident Email ";
+$projectName = "ALL-9602 ADA Graduate Offer";
 
 // 2. DYNAMIC VERSION DETECTION
 function getVersionLabel($filename) {
