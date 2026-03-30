@@ -1,390 +1,281 @@
 <?php
 /**
- * Modern Email Proofer Index - Centered Stacked Layout
- * Automatically detects emails in the same folder and provides Desktop/Mobile toggles.
+ * Email Proofer Index - Centered Stacked Layout
+ * Groups by Sub-Category (WARMUP/FOLLOWUP) and sorts by Category Order.
  */
 
-// 1. CUSTOM LABELS CONFIGURATION
-// Edit these to match your specific project needs.
-$customLabels = [
-    'e1' => '',
-];
-
+/**
+ * 1. CONFIGURATION
+ */
 $projectName = "ALL-9602 ADA Graduate Offer";
 
-// 2. DYNAMIC VERSION DETECTION
-function getVersionLabel($filename) {
-    $parts = explode('_', str_replace('.html', '', $filename));
-    return strtoupper(end($parts)); // Returns E1, E2, etc.
-}
+/**
+ * CATEGORY ORDER: 
+ * Define the order you want acronyms to appear.
+ */
+$categoryOrder = ['ALL'];
 
-// 3. CONFIGURATION & FILE SCANNING
-$dir = __DIR__;
-$files = scandir($dir);
-$emailFiles = [];
+/**
+ * SUB-CATEGORY GROUPS:
+ * These will act as the OptGroup headers in the dropdown.
+ */
+$subCategoryGroups = [
+    'ADA'   => ['ada-e1', 'ada-e2'],
+];
 
-foreach ($files as $file) {
-    if (pathinfo($file, PATHINFO_EXTENSION) === 'html') {
-        $emailFiles[] = $file;
+/**
+ * CUSTOM LABELS CONFIGURATION 
+ * Matches the 'key' generated (prefix-version)
+ */
+$customLabels = [
+    'ada-e1' => 'E1 ADA',
+    'ada-e2' => 'E2 ADA',
+];
+
+/**
+ * SUBJECT AND PREHEADER CONFIGURATION
+ If 2 is left blank or TBD it will NOT be shown
+ */
+$metaDefaults = 
+[
+    'ada-e1' => [
+        'subject1'   => "As You Graduate, Protect What Matters Most",
+        'subject2'   => "TBD",
+        'preheader1' => "TBD",
+        'preheader2' => "TBD",
+    ],
+    'ada-e2' => [
+        'subject1'   => "Graduating Soon? Here’s How to Keep Your ADA Coverage in Place",
+        'subject2'   => "TBD",
+        'preheader1' => "TBD",
+        'preheader2' => "TBD",
+    ],
+];
+
+// 2. LOGIC FUNCTIONS
+function getFileInfo($filename, $subCategoryGroups = []) {
+    if (!$filename) return null;
+    $clean = str_replace('.html', '', $filename);
+    
+    $delimiter = (strpos($clean, '-') !== false) ? '-' : '_';
+    $parts = explode($delimiter, $clean);
+    
+    $prefix  = strtoupper($parts[0]); 
+    $version = strtolower(end($parts)); 
+    
+    preg_match('/\d+/', $version, $matches);
+    $vNum = isset($matches[0]) ? (int)$matches[0] : 999;
+    
+    $key = strtolower($parts[0] . '-' . end($parts));
+    
+    $groupLabel = 'OTHER';
+    foreach ($subCategoryGroups as $label => $keys) {
+        if (in_array($key, $keys)) {
+            $groupLabel = $label;
+            break;
+        }
     }
+    
+    return [
+        'prefix'     => $prefix,
+        'groupLabel' => $groupLabel,
+        'version'    => $version,
+        'vNum'       => $vNum,
+        'key'        => $key,
+        'full'       => "$prefix " . strtoupper($version)
+    ];
 }
 
-// 4. GET CURRENT STATE
-$currentFile = isset($_GET['f']) ? $_GET['f'] : (isset($emailFiles[0]) ? $emailFiles[0] : '');
-$viewMode = isset($_GET['m']) ? $_GET['m'] : 'desktop'; 
+// 3. FILE PROCESSING
+$emailFiles = array_filter(scandir(__DIR__), function($f) {
+    return pathinfo($f, PATHINFO_EXTENSION) === 'html';
+});
 
-// Modern Device Dimensions
+usort($emailFiles, function($a, $b) use ($categoryOrder, $subCategoryGroups) {
+    $infoA = getFileInfo($a, $subCategoryGroups);
+    $infoB = getFileInfo($b, $subCategoryGroups);
+    
+    $groups = array_keys($subCategoryGroups);
+    $gPosA = array_search($infoA['groupLabel'], $groups);
+    $gPosB = array_search($infoB['groupLabel'], $groups);
+    $gPosA = ($gPosA === false) ? 999 : $gPosA;
+    $gPosB = ($gPosB === false) ? 999 : $gPosB;
+    
+    if ($gPosA !== $gPosB) return $gPosA <=> $gPosB;
+
+    $posA = array_search($infoA['prefix'], $categoryOrder);
+    $posB = array_search($infoB['prefix'], $categoryOrder);
+    $posA = ($posA === false) ? 999 : $posA;
+    $posB = ($posB === false) ? 999 : $posB;
+    
+    if ($posA !== $posB) return $posA <=> $posB;
+    
+    return $infoA['vNum'] <=> $infoB['vNum'];
+});
+
+$groupedFiles = [];
+foreach ($emailFiles as $f) {
+    $info = getFileInfo($f, $subCategoryGroups);
+    $groupedFiles[$info['groupLabel']][] = ['file' => $f, 'info' => $info];
+}
+
+// 4. STATE
+$currentFile = $_GET['f'] ?? ($emailFiles[0] ?? '');
+$viewMode    = $_GET['m'] ?? 'desktop';
+$curInfo     = getFileInfo($currentFile, $subCategoryGroups);
+
+$lookupKey = $curInfo['key'] ?? '';
+$meta = $metaDefaults[$lookupKey] ?? [
+    'subject1'   => 'Subject 1 TBD', 
+    'preheader1' => 'Preheader 1 TBD'
+];
+
 $mobileWidth = 393;
 $mobileHeight = 852;
-
-// 5. DEFINE METADATA (Subject/Preheader)
-$tagRaw = getVersionLabel($currentFile);
-$vTag = $currentFile ? "(" . $tagRaw . ") " : "";
-$subject = "Subject TBD";
-$subject2 = ""; 
-$preheader = "Preheader TBD";
-
-// Logic based on the detected version tag
-$tagLower = strtolower($tagRaw);
-
-if ($tagLower === 'e1') {
-    $subject = $vTag . "As You Graduate, Protect What Matters Most";
-    $preheader = "TBD";
-//} elseif ($tagLower === 'e2') {
-//    $subject = $vTag . "[NAME], another benefit of your ADA Student Membership";
-//	  $subject2 = $vTag . "Alternative Subject: Secure your future today, [NAME]";
-//    $preheader = "Activate your Life Insurance and Disability Insurance with guaranteed acceptance";
-} else {
-    $subject = $vTag . $subject;
-}
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title><?php echo $projectName; ?> - <?php echo htmlspecialchars($currentFile); ?></title>
+    <title><?php echo $projectName; ?></title>
     <style>
         :root {
             --bg-color: #f0f2f5;
             --card-bg: #ffffff;
-            --accent-color: #007bff;
-            --text-main: #1a1a1a;
-            --text-muted: #65676b;
-            --content-width: 800px; 
-            --border-gray: #666666;
+            --accent-color: #2563eb;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --content-width: 900px; 
+            --border-gray: #e2e8f0;
+            --frame-border: #475569;
         }
-
         body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            overflow-x: hidden;
+            margin: 0; padding: 0; min-height: 100%;
+            font-family: 'Inter', -apple-system, system-ui, sans-serif;
+            background-color: var(--bg-color); color: var(--text-main); line-height: 1.5;
         }
-
-        .wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-            min-height: 100vh;
-            box-sizing: border-box;
-            max-width: 100vw;
-        }
-
+        .wrapper { display: flex; flex-direction: column; align-items: center; padding: 12px; box-sizing: border-box; }
+        
         #top-nav {
-            width: 100%;
-            max-width: var(--content-width);
-            background: var(--card-bg);
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            margin-bottom: 20px;
-            padding: 20px;
-            box-sizing: border-box;
+            width: 100%; max-width: var(--content-width);
+            background: var(--card-bg); border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            margin-bottom: 24px; padding: 24px; box-sizing: border-box;
         }
-
-        .header-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #eee;
-            gap: 10px;
+        
+        .header-row { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 20px; 
+            padding-bottom: 20px; 
+            border-bottom: 1px solid var(--border-gray); 
+            gap: 16px; 
         }
-
-        .project-info {
-            min-width: 0; /* Allows shrinking for long titles */
+        
+        .project-info h1 { margin: 0; font-size: 1.25rem; font-weight: 800; letter-spacing: -0.025em; }
+        
+        .view-toggles { 
+            display: flex; 
+            gap: 8px; 
+            align-items: center; 
+            flex-wrap: nowrap;
         }
-
-        .project-info h1 {
-            margin: 0;
-            font-size: 1.2rem;
-            color: var(--text-main);
-            font-weight: 700;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-        }
-
-        /* MOBILE ADJUSTMENT: Stack title above buttons and allow button wrap */
-        @media screen and (max-width: 600px) {
-            .wrapper { padding: 10px; }
-            #top-nav { padding: 15px; }
-            .header-row {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
-            }
-            .view-toggles {
-                width: 100%;
-                flex-wrap: wrap; /* CRITICAL: Allows buttons to wrap on smaller Pro screens */
-                justify-content: flex-start;
-                background: none !important; /* Move bg to buttons for wrap safety */
-                padding: 0 !important;
-                gap: 6px !important;
-            }
-            .view-btn, .print-btn, .unwrap-btn {
-                background: #eee;
-                flex-grow: 1;
-                justify-content: center;
-                padding: 10px 8px !important;
-            }
-            .view-btn.active {
-                background: var(--accent-color) !important;
-                color: #fff !important;
-            }
-            .divider { display: none !important; }
-        }
-
-        .controls {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            align-items: center;
-        }
-
-        .version-select {
-            flex-grow: 1;
-            min-width: 200px;
-            position: relative;
-        }
-
-        /* STYLED DROPDOWN */
-        select {
-            width: 100%;
-            padding: 12px 40px 12px 16px;
-            border-radius: 8px;
-            border: 2px solid var(--accent-color);
-            background: #fff;
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--text-main);
-            cursor: pointer;
-            appearance: none;
-            -webkit-appearance: none;
-            transition: all 0.2s;
-            box-shadow: 0 2px 5px rgba(0,123,255,0.1);
-        }
-
-        select:hover {
-            border-color: #0056b3;
-            background-color: #f8fbff;
-        }
-
-        .version-select::after {
-            content: "";
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 0; 
-            height: 0; 
-            border-left: 6px solid transparent;
-            border-right: 6px solid transparent;
-            border-top: 6px solid var(--accent-color);
-            pointer-events: none;
-        }
-
-        .view-toggles {
-            display: flex;
-            background: #eee;
-            padding: 4px;
-            border-radius: 10px;
-            gap: 2px;
-        }
-
-        .view-btn, .print-btn, .unwrap-btn {
-            padding: 8px 16px;
-            border-radius: 7px;
-            text-decoration: none;
-            color: var(--text-muted);
-            font-size: 13px;
-            font-weight: 600;
-            transition: all 0.2s;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
+        
+        .view-btn { 
+            height: 38px; padding: 0 16px; border-radius: 8px; text-decoration: none; 
+            font-size: 13px; font-weight: 600; color: var(--text-muted); transition: 0.2s; 
+            display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+            background: #ffffff;
+            border: 1px solid var(--border-gray);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            cursor: pointer; 
             white-space: nowrap;
         }
-
-        .view-btn.active {
-            background: #fff;
-            color: var(--accent-color);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        .view-btn.active { 
+            background: var(--accent-color); 
+            color: #ffffff; 
+            border-color: var(--accent-color);
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2); 
+        }
+        .view-btn:hover:not(.active) { 
+            color: var(--text-main); 
+            border-color: var(--text-muted);
+            background: #f8fafc;
+        }
+        
+        .selector-w { margin-bottom: 20px; }
+        
+        select { 
+            width: 100%; padding: 14px; border-radius: 12px; 
+            border: 2px solid var(--border-gray); font-size: 16px; 
+            font-weight: 500; background: white; outline: none; 
+            appearance: none; color: #000000;
         }
 
-        .print-btn:hover, .unwrap-btn:hover {
-            background: #e0e0e0;
-            color: #333;
-        }
+        optgroup { font-style: normal; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; background: #f1f5f9; }
+        option { font-weight: 500; padding: 8px; background: #fff; }
 
-        .meta-stack {
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 12px 15px;
-            font-size: 13px;
-            line-height: 1.5;
-            border: 1px solid #edf0f2;
-        }
-
-        .meta-line {
-            margin-bottom: 4px;
-            display: flex;
-            flex-wrap: wrap;
-        }
+        .meta-stack { background: #f8fafc; border: 1px solid var(--border-gray); border-radius: 12px; padding: 16px; font-size: 14px; }
+        .meta-line { display: flex; gap: 12px; margin-bottom: 8px; }
         .meta-line:last-child { margin-bottom: 0; }
-        .meta-line b { 
-            min-width: 90px; 
-            color: var(--text-main);
-        }
-        .meta-line span { 
-            color: var(--text-muted); 
-            word-break: break-word;
-            flex: 1;
-            min-width: 150px;
-        }
-
-        #preview-container {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            padding-bottom: 50px;
-        }
-
-        #print-mount {
-            display: none;
-        }
-
-        .mode-desktop #preview-frame {
-            width: 100%;
-            max-width: var(--content-width);
-            height: 1200px; 
-            background: #fff;
-            border: 1px solid var(--border-gray);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            border-radius: 4px;
-        }
-
-        .mode-mobile #preview-frame {
-            width: <?php echo $mobileWidth; ?>px;
-            height: <?php echo $mobileHeight; ?>px;
-            border: 14px solid #1a1a1a;
-            border-radius: 54px; 
-            background: #fff;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
-            position: relative;
+        .meta-line b { font-weight: 700; color: var(--text-muted); min-width: 95px; }
+        
+        #preview-container { width: 100%; display: flex; justify-content: center; padding-bottom: 50px; }
+        .mode-desktop #preview-frame { width: 100%; max-width: var(--content-width); height: 1000px; border: 1pt solid var(--frame-border); border-radius: 12px; background: white; overflow: hidden; }
+        
+        .mode-mobile #preview-frame { 
+            width: <?php echo $mobileWidth; ?>px; 
+            height: <?php echo $mobileHeight; ?>px; 
+            border: 12px solid #1e293b; 
+            border-radius: 40px; 
+            background: white; 
+            position: relative; 
             overflow: hidden; 
-            transform-origin: top center;
+            transform-origin: top center; 
+        }
+        
+        iframe { width: 100%; height: 100%; border: none; display: block; }
+        
+        #print-mount { display: none; }
+
+        /* RESPONSIVE OVERRIDES */
+        @media (max-width: 768px) {
+            .wrapper { padding: 10px; }
+            #top-nav { padding: 16px; }
+            .header-row { flex-direction: column; text-align: center; align-items: center; gap: 16px; padding-bottom: 16px; }
+            .view-toggles { width: 100%; justify-content: center; gap: 6px; }
+            .view-btn { padding: 0 10px; font-size: 12px; gap: 4px; height: 34px; flex: 1; max-width: 85px; }
+            .meta-line { flex-direction: column; gap: 4px; margin-bottom: 12px; }
+            .meta-line b { min-width: unset; }
+            .mode-mobile #preview-frame { transform: scale(0.85); margin-bottom: -100px; }
         }
 
-        /* Scale down the mobile phone preview if screen is too small */
-        @media screen and (max-width: 450px) {
-            .mode-mobile #preview-frame {
-                transform: scale(0.85);
-            }
-        }
-        @media screen and (max-width: 380px) {
-            .mode-mobile #preview-frame {
-                transform: scale(0.75);
-            }
-        }
-
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            display: block;
+        @media (max-width: 480px) {
+            .view-toggles { gap: 4px; }
+            .view-btn { padding: 0 4px; font-size: 10.5px; height: 32px; letter-spacing: -0.01em; }
+            .view-btn svg { width: 11px; height: 11px; }
+            .mode-mobile #preview-frame { transform: scale(0.7); margin-bottom: -240px; }
+            .project-info h1 { font-size: 1.1rem; }
         }
 
         @media print {
-            @page {
-                size: portrait;
-                margin: 0.5in;
-            }
-            body, html {
-                background: #fff !important;
-                /* Crucial: remove fixed heights and hidden overflows for pagination */
-                height: auto !important;
-                overflow: visible !important;
-            }
-            .wrapper {
-                background: #fff !important;
-                display: block !important;
-                height: auto !important;
-                padding: 0 !important;
-                margin: 0 !important;
-                overflow: visible !important;
-            }
-            #top-nav {
-                box-shadow: none !important;
-                border: none !important;
-                max-width: 100% !important;
-                margin: 0 0 10px 0 !important;
-                padding: 0 !important;
-                overflow: visible !important;
-            }
-            .header-row, .controls {
-                display: none !important; 
-            }
-            .meta-stack {
-                background: #fff !important;
-                border: none !important;
-                padding: 0 0 10px 0 !important;
-                font-size: 11pt !important;
-                border-bottom: 1px solid #333 !important;
-                border-radius: 0 !important;
-                margin-bottom: 15px !important;
-                break-after: avoid !important;
-            }
-            #preview-container {
-                display: none !important; 
-            }
-            #print-mount {
-                display: block !important;
-                width: 100% !important;
-                height: auto !important;
-                overflow: visible !important;
-            }
+            .header-row, .selector-w, #preview-container { display: none !important; }
+            #top-nav { box-shadow: none; border: none; padding: 0; margin-bottom: 20px; width: 100%; max-width: 100%; }
+            .meta-stack { background: transparent; border: none; border-bottom: 2px solid #000; border-radius: 0; padding: 0 0 15px 0; width: 100%; }
+            #print-mount { display: block !important; width: 100%; height: auto; margin-top: 10px; }
+            .wrapper { padding: 0; width: 100%; align-items: flex-start; }
+            body, html { background: white; }
         }
     </style>
     <script>
         function preparePrint() {
             const frame = document.querySelector('iframe');
             const printMount = document.getElementById('print-mount');
-            
             if (frame && frame.contentWindow) {
-                const emailContent = frame.contentWindow.document.documentElement.innerHTML;
-                printMount.innerHTML = emailContent;
-                
-                setTimeout(() => {
-                    window.print();
-                }, 200);
+                printMount.innerHTML = frame.contentWindow.document.documentElement.innerHTML;
+                setTimeout(() => { window.print(); }, 200);
             } else {
                 window.print();
             }
@@ -392,57 +283,54 @@ if ($tagLower === 'e1') {
     </script>
 </head>
 <body class="mode-<?php echo $viewMode; ?>">
-
     <div class="wrapper">
         <nav id="top-nav">
             <div class="header-row">
-                <div class="project-info">
-                    <h1><?php echo $projectName; ?></h1>
-                </div>
+                <div class="project-info"><h1><?php echo $projectName; ?></h1></div>
                 <div class="view-toggles">
-                    <a href="index.php?f=<?php echo $currentFile; ?>&m=desktop" class="view-btn <?php echo ($viewMode == 'desktop') ? 'active' : ''; ?>">Desktop</a>
-                    <a href="index.php?f=<?php echo $currentFile; ?>&m=mobile" class="view-btn <?php echo ($viewMode == 'mobile') ? 'active' : ''; ?>">Mobile</a>
-                    <a href="<?php echo htmlspecialchars($currentFile); ?>" target="_blank" class="unwrap-btn">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                    <a href="?f=<?php echo $currentFile; ?>&m=desktop" class="view-btn <?php echo $viewMode=='desktop'?'active':''; ?>">Desktop</a>
+                    <a href="?f=<?php echo $currentFile; ?>&m=mobile" class="view-btn <?php echo $viewMode=='mobile'?'active':''; ?>">Mobile</a>
+                    <a href="<?php echo htmlspecialchars($currentFile); ?>" target="_blank" class="view-btn">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
                         Unwrap
                     </a>
-                    <div class="divider" style="width: 1px; background: #ddd; margin: 0 5px;"></div>
-                    <button onclick="preparePrint()" class="print-btn">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"></path><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                    <button onclick="preparePrint()" class="view-btn">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"></path><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
                         PDF
                     </button>
                 </div>
             </div>
-            
-            <div class="controls">
-                <div class="version-select">
-                    <form id="fileForm" method="GET" action="index.php">
-                        <input type="hidden" name="m" value="<?php echo $viewMode; ?>">
-                        <select name="f" onchange="this.form.submit()">
-                            <?php if (empty($emailFiles)): ?>
-                                <option>No HTML files found</option>
-                            <?php else: ?>
-                                <?php foreach ($emailFiles as $file): ?>
-                                    <?php 
-                                        $vKey = strtolower(getVersionLabel($file));
-                                        $labelText = isset($customLabels[$vKey]) ? $customLabels[$vKey] : htmlspecialchars($file);
-                                    ?>
-                                    <option value="<?php echo $file; ?>" <?php echo ($currentFile == $file) ? 'selected' : ''; ?>>
-                                        (<?php echo strtoupper($vKey); ?>) <?php echo $labelText; ?>
+
+            <div class="selector-w">
+                <form id="prooferForm" method="GET">
+                    <input type="hidden" name="m" value="<?php echo $viewMode; ?>">
+                    <select name="f" onchange="this.form.submit()">
+                        <?php foreach ($groupedFiles as $label => $group): ?>
+                            <optgroup label="── <?php echo htmlspecialchars($label); ?> ──">
+                                <?php foreach ($group as $item): 
+                                    $fullKey = $item['info']['key'];
+                                    $text = $customLabels[$fullKey] ?? $item['file'];
+                                ?>
+                                    <option value="<?php echo $item['file']; ?>" <?php echo $currentFile == $item['file'] ? 'selected' : ''; ?>>
+                                        (<?php echo strtoupper($item['info']['version']); ?>) <?php echo $text; ?>
                                     </option>
                                 <?php endforeach; ?>
-                            <?php endif; ?>
-                        </select>
-                    </form>
-                </div>
+                            </optgroup>
+                        <?php endforeach; ?>
+                    </select>
+                </form>
             </div>
 
-            <div class="meta-stack" style="margin-top: 15px;">
-                <div class="meta-line"><b>Subject:</b> <span><?php echo htmlspecialchars($subject); ?></span></div>
-                <?php if (!empty($subject2)): ?>
-                    <div class="meta-line"><b>Subject 2:</b> <span><?php echo htmlspecialchars($subject2); ?></span></div>
+            <div class="meta-stack">
+                <div class="meta-line"><b>Subject 1</b> <span><?php echo htmlspecialchars($meta['subject1'] ?? 'TBD'); ?></span></div>
+                <?php if (!empty($meta['subject2']) && $meta['subject2'] !== 'TBD'): ?>
+                    <div class="meta-line"><b>Subject 2</b> <span><?php echo htmlspecialchars($meta['subject2']); ?></span></div>
                 <?php endif; ?>
-                <div class="meta-line"><b>Preheader:</b> <span><?php echo htmlspecialchars($preheader); ?></span></div>
+                
+                <div class="meta-line"><b>Preheader 1</b> <span><?php echo htmlspecialchars($meta['preheader1'] ?? 'TBD'); ?></span></div>
+                <?php if (!empty($meta['preheader2']) && $meta['preheader2'] !== 'TBD'): ?>
+                    <div class="meta-line"><b>Preheader 2</b> <span><?php echo htmlspecialchars($meta['preheader2']); ?></span></div>
+                <?php endif; ?>
             </div>
         </nav>
 
@@ -451,15 +339,10 @@ if ($tagLower === 'e1') {
                 <div id="preview-frame">
                     <iframe src="<?php echo $currentFile; ?>?t=<?php echo time(); ?>"></iframe>
                 </div>
-            <?php else: ?>
-                <div style="text-align:center; color:#999; padding-top:100px;">
-                    <h2>No emails found.</h2>
-                </div>
             <?php endif; ?>
         </main>
-
+        
         <div id="print-mount"></div>
     </div>
-
 </body>
 </html>
