@@ -20,7 +20,7 @@ $categoryOrder = ['ALL'];
  * These will act as the OptGroup headers in the dropdown.
  */
 $subCategoryGroups = [
-    'ADA'   => ['ada-e1', 'ada-e2'],
+    'ADA'   => ['ada-e1', 'ada-e2', 'ada-e3'],
 ];
 
 /**
@@ -30,6 +30,7 @@ $subCategoryGroups = [
 $customLabels = [
     'ada-e1' => 'E1 ADA',
     'ada-e2' => 'E2 ADA',
+    'ada-e3' => 'E3 ADA',
 ];
 
 /**
@@ -46,6 +47,12 @@ $metaDefaults =
     ],
     'ada-e2' => [
         'subject1'   => "Graduating Soon? Here’s How to Keep Your ADA Coverage in Place",
+        'subject2'   => "TBD",
+        'preheader1' => "TBD",
+        'preheader2' => "TBD",
+    ],
+    'ada-e3' => [
+        'subject1'   => "Act Now: Set Up Autopay to Keep Your Coverage After Graduation",
         'subject2'   => "TBD",
         'preheader1' => "TBD",
         'preheader2' => "TBD",
