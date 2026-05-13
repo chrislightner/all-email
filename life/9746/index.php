@@ -38,7 +38,7 @@ $subCategoryGroups = [
 $metaDefaults = 
 [
     'ada-e1' => [
-        'subject1'   => "TBD",
+        'subject1'   => "ADA members can save 32% on life insurance",
         'subject2'   => "TBD",
         'preheader1' => "TBD",
         'preheader2' => "TBD",
