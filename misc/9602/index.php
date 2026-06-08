@@ -20,7 +20,7 @@ $categoryOrder = ['ALL'];
  * These will act as the OptGroup headers in the dropdown.
  */
 $subCategoryGroups = [
-    'ADA'   => ['ada-e1', 'ada-e2', 'ada-e3'],
+    'ADA'   => ['ada-e1', 'ada-e2', 'ada-e3', 'ada-e4'],
 ];
 
 /**
@@ -31,6 +31,7 @@ $customLabels = [
     'ada-e1' => 'E1 ADA',
     'ada-e2' => 'E2 ADA',
     'ada-e3' => 'E3 ADA',
+    'ada-e4' => 'E4 ADA',
 ];
 
 /**
@@ -57,7 +58,12 @@ $metaDefaults =
         'preheader1' => "TBD",
         'preheader2' => "TBD",
     ],
-];
+    'ada-e4' => [
+        'subject1'   => "Good News: Your Student Life Insurance Coverage Is Increasing",
+        'subject2'   => "TBD",
+        'preheader1' => "TBD",
+        'preheader2' => "TBD",
+    ],];
 
 // 2. LOGIC FUNCTIONS
 function getFileInfo($filename, $subCategoryGroups = []) {
