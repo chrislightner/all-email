@@ -59,7 +59,7 @@ $metaDefaults =
         'preheader2' => "TBD",
     ],
     'ada-e4' => [
-        'subject1'   => "Good News: Your Student Life Insurance Coverage Is Increasing",
+        'subject1'   => "Good News: Your Student Life Insurance Coverage Has Increased",
         'subject2'   => "TBD",
         'preheader1' => "TBD",
         'preheader2' => "TBD",
