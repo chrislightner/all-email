@@ -39,7 +39,7 @@ $customLabels = [
 $metaDefaults = 
 [
     'ada-e1' => [
-        'subject1'   => "Dr. [NAME], strengthen your disability income protection",
+        'subject1'   => "Dr. [NAME], help strengthen your disability income protection",
         'preheader1' => "TBD",
     ]
 ];
